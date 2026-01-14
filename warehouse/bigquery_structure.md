@@ -1,7 +1,7 @@
 #### Healthcare Provider Analytics Pipeline BigQuery Structure
 The BigQuery warehouse is split into two datasets to separate source data from analytics-ready models:
 
-###### healthcare_provider_analytics_pipeline_raw**
+###### healthcare_provider_analytics_pipeline_raw
 Stores raw source of truth data from bigquery-public-data.cms_medicare and the U.S. Census (for zipcode metrics)
 
 **Tables:**
