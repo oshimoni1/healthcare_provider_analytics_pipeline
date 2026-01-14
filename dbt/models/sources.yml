@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  # ----------------------
+  # ZIP CODE CENSUS DATA
+  # ----------------------
+  - name: census_data               # dbt reference name
+    database: oshimoni-data         # BigQuery project
+    schema: healthcare_provider_analytics_pipeline_raw  # BigQuery dataset
+    tables:
+      - name: zip_code_census_data
+        description: "ZIP-level Census data: population and median age"
+
+  # ----------------------
+  # RAW INPATIENT DATA
+  # ----------------------
+  - name: inpatient_data            
+    database: oshimoni-data
+    schema: healthcare_provider_analytics_pipeline_raw
+    tables:
+      - name: raw_inpatient_data
+        description: "Raw inpatient data from CMS, per provider and DRG"
+
+  # ----------------------
+  # RAW HOSPITAL GENERAL DATA
+  # ----------------------
+  - name: hospital_data
+    schema: healthcare_provider_analytics_pipeline_raw
+    tables:
+      - name: raw_hospital_general_info
+        description: "Raw hospital general info data from CMS"

@@ -1,0 +1,137 @@
+version: 2
+
+# ----------------------
+# STAGING MODELS
+# ----------------------
+models:
+  - name: stg_zipcode_data
+    description: "Cleaned ZIP-level Census data with population and median age"
+    columns:
+      - name: zip
+        description: "ZIP code tabulation area"
+        tests:
+          - not_null
+          - unique
+      - name: population
+        description: "Population of the ZIP"
+        tests:
+          - not_null
+      - name: median_age
+        description: "Median age of ZIP population"
+        tests:
+          - not_null
+
+  - name: stg_inpatient_data
+    description: "Raw inpatient data per provider and DRG"
+    columns:
+      - name: provider_id
+        description: "CMS provider identifier"
+        tests:
+          - not_null
+      - name: provider_name
+        description: "Hospital or provider name"
+        tests:
+          - not_null
+  
+  - name: stg_hospital_general_info
+    description: "Raw hospital general info data"
+    columns:
+      - name: provider_id
+        tests:
+          - not_null
+          - unique
+
+# ----------------------
+# INTERMEDIATE MODELS
+# ----------------------
+  - name: int_provider_zip_data
+    description: "Join of inpatient data with ZIP-level Census demographics"
+    columns:
+      - name: provider_id
+        description: "CMS provider identifier"
+        tests:
+          - not_null
+      - name: provider_zipcode
+        description: "ZIP code for the provider"
+        tests:
+          - not_null
+      - name: total_discharges
+        description: "Total discharges per DRG"
+        tests:
+          - not_null
+
+# ----------------------
+# DIMENSION TABLES
+# ----------------------
+  - name: dim_hospital_general_info
+    description: "Hospital info with quality metrics"
+
+# ----------------------
+# FACT TABLES
+# ----------------------
+  - name: fct_provider_totals
+    description: "Aggregated provider-level totals across DRGs"
+    columns:
+      - name: provider_id
+        description: "Provider ID"
+        tests:
+          - not_null
+      - name: provider_name
+        description: "Provider name"
+        tests:
+          - not_null
+      - name: provider_city
+        description: "City of the provider"
+        tests:
+          - not_null
+      - name: total_discharges
+        description: "Total discharges for the provider"
+        tests:
+          - not_null
+      - name: total_covered_charges
+        description: "Total covered charges weighted by discharges"
+        tests:
+          - not_null
+      - name: total_medicare_payments
+        description: "Total Medicare payments weighted by discharges"
+        tests:
+          - not_null
+      - name: drg_count
+        description: "Number of DRGs aggregated for this provider"
+        tests:
+          - not_null
+
+# ----------------------
+# MART TABLES
+# ----------------------
+  - name: rural_midwest_provider_metrics
+    description: "Provider-level metrics filtered for rural Midwest cities with business rules"
+    columns:
+      - name: provider_id
+        description: "Provider ID"
+        tests:
+          - not_null
+      - name: provider_name
+        description: "Provider name"
+        tests:
+          - not_null
+      - name: provider_city
+        description: "City of the provider"
+        tests:
+          - not_null
+      - name: total_discharges
+        description: "Total discharges for the provider"
+        tests:
+          - not_null
+      - name: reimbursement_rate
+        description: "Weighted reimbursement rate = total covered charges / total Medicare payments"
+        tests:
+          - not_null
+      - name: discharges_per_capita
+        description: "Total discharges divided by city population"
+        tests:
+          - not_null
+      - name: drg_count
+        description: "Number of DRGs aggregated for this provider (must be >5)"
+        tests:
+          - not_null
