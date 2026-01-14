@@ -5,10 +5,8 @@ from google.cloud import bigquery
 from config import BIGQUERY_SERVICE_ACCOUNT_JSON, BIGQUERY_DESTINATION_TABLE, US_CENSUS_API_KEY, CENSUS_VARIABLES
 
 
-# BIGQUERY CONFIG
+# BIGQUERY SERVICE ACCOUNT
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = BIGQUERY_SERVICE_ACCOUNT_JSON
-
-BIGQUERY_DESTINATION_TABLE = "oshimoni-data.healthcare_provider_analytics_pipeline_raw.zip_code_census_data"
 
 def fetch_census_data(variables: str):
     endpoint = "https://api.census.gov/data/2023/acs/acs5"
